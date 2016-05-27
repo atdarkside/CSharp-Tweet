@@ -10,9 +10,9 @@ namespace post {
     class Program {
         static void Main(string[] args) {
             Consumer matomeNaver = new Consumer("rLiy8r1ChLkjm58RmrJtsAuWg", "yby8MpKk95L2PCRm8hV6ZSYseYy6paPQRBl3PD28TpukgREVFo");
-            Token pf35301 = new Token("3299527134-kMVohuPpsZ4IEO858OjCROT9LhtzdqFmi5MCd6P", "zs7vzSSHNOsdIxajpvYZSNMxtHxif5jpSrAaS3LeamTsi");
+            Token _Token = new Token("", "");
             var tokens = new[] {
-                CoreTweet.Tokens.Create(matomeNaver.CK,matomeNaver.CS,pf35301.token, pf35301.tokenSecret)
+                CoreTweet.Tokens.Create(matomeNaver.CK,matomeNaver.CS,_Token.token, _Token.tokenSecret)
             };
             
             string text = "test";
