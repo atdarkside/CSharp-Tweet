@@ -76,11 +76,9 @@ namespace post {
             foreach(CoreTweet.Status status in account.Statuses.UserTimeline(count => 5000)) {
                 //Console.WriteLine(status.GetType().Name);
                 Console.WriteLine("UserTimeline");
-                if(status.User.ScreenName == limitID || limitID == null) {
-                    Console.WriteLine("User:" + status.User.ScreenName);
-                    Console.WriteLine(status.Text);
-                    Console.WriteLine("--------------------------------");
-                }
+                Console.WriteLine("User:" + status.User.ScreenName);
+                Console.WriteLine(status.Text);
+                Console.WriteLine("--------------------------------");
             }
         }
     }
