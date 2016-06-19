@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using CoreTweet.Streaming;
 
 namespace post {
     class Program {
@@ -13,9 +15,13 @@ namespace post {
             Token _token = new Token("", "");
             Account account = new Account(_consumer, _token);
 
-            account.HomeTimeLine();
-            account.UserTimeLine();
-            account.tweet("test");
+            //account.HomeTimeLine();
+            //account.UserTimeLine();
+            //account.follow("");
+            //account.tweet(Console.ReadLine());
+            //account.userFav("",50);
+
+            Console.WriteLine("------------終了-----------");
             Console.ReadKey();
         }
     }
@@ -45,7 +51,6 @@ namespace post {
         public string tokenSecret { get; private set; }
         public string CK { get; private set; }
         public string CS { get; private set; }
-        public string limitID;
         CoreTweet.Tokens account;
 
         public Account(Consumer _consumer,Token _token) {
@@ -64,11 +69,9 @@ namespace post {
             foreach(CoreTweet.Status status in account.Statuses.HomeTimeline(count => 5000)) {
                 //Console.WriteLine(status.GetType().Name);
                 Console.WriteLine("HomeTimeline");
-                if(status.User.ScreenName == limitID || limitID == null) {
-                    Console.WriteLine("User:" + status.User.ScreenName);
-                    Console.WriteLine(status.Text);
-                    Console.WriteLine("--------------------------------");
-                }
+                Console.WriteLine("User:" + status.User.ScreenName);
+                Console.WriteLine(status.Text);
+                Console.WriteLine("--------------------------------");
             }
         }
 
@@ -79,6 +82,30 @@ namespace post {
                 Console.WriteLine("User:" + status.User.ScreenName);
                 Console.WriteLine(status.Text);
                 Console.WriteLine("--------------------------------");
+            }
+        }
+
+        public void follow(string target) {
+            try {
+                account.Friendships.Create(screen_name => target);
+                Console.WriteLine($"{target}:Followed");
+            }
+            catch {
+                Console.WriteLine("Follow Failed");
+            }
+        }
+
+        public void userFav(string userID,int _count) {
+            Console.WriteLine($"UserID:{userID}");
+            foreach(CoreTweet.Status status in account.Statuses.UserTimeline(screen_name => userID,count => _count)) {
+                try {
+                    account.Favorites.Create(id => status.Id);
+                    Console.WriteLine(status.Text);
+                    Console.WriteLine("---------------------------");
+                }
+                catch {
+                    Console.WriteLine("Fav Failed");
+                }
             }
         }
     }
