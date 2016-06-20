@@ -26,7 +26,7 @@ namespace tweet
             //account.follow("");
             //account.tweet(Console.ReadLine());
             //account.userFav("rinaty0514",100);
-            account.streamingFav("reizou05");
+            account.streamingFav("TestC47908426");
 
             Console.ReadKey();
         }
@@ -140,13 +140,26 @@ namespace tweet
 
         public void streamingFav(string userID)
         {
-            Status st;
+            Action<Status> fav = (state =>
+            {
+                if (state.User.ScreenName == userID)
+                {
+                    account.Favorites.Create(id => state.Id);
+                    Console.WriteLine($"User:{state.User.ScreenName}\n{state.Text}\nFaved\n");
+                }
+                else
+                {
+                    Console.WriteLine($"User:{state.User.ScreenName}\n{state.Text}\n");
+                }
+            }
+            );
 
+            Console.WriteLine($"User:{userID}");
             account.Streaming.UserAsObservable()
                 .Where((StreamingMessage m) => m.Type == MessageType.Create)
                 .Cast<StatusMessage>()
                 .Select((StatusMessage m) => m.Status)
-                .Subscribe((Status s) => Console.WriteLine($"User:{s.User.ScreenName}\n{s.Text}"));
+                .Subscribe((Status s) => fav(s));
             
 
             //Thread.Sleep(TimeSpan.FromSeconds(10));
