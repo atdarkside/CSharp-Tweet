@@ -17,16 +17,16 @@ namespace tweet
     {
         static void Main(string[] args)
         {
-            Consumer _consumer = new Consumer("", "");
-            Token _token = new Token("", "");
+            Consumer _consumer = new Consumer("rLiy8r1ChLkjm58RmrJtsAuWg", "yby8MpKk95L2PCRm8hV6ZSYseYy6paPQRBl3PD28TpukgREVFo");
+            Token _token = new Token("3299527134-kMVohuPpsZ4IEO858OjCROT9LhtzdqFmi5MCd6P", "zs7vzSSHNOsdIxajpvYZSNMxtHxif5jpSrAaS3LeamTsi");
             Account account = new Account(_consumer, _token);
 
             //account.HomeTimeLine();
             //account.UserTimeLine();
             //account.follow("");
             //account.tweet(Console.ReadLine());
-            //account.userFav("",100);
-            //account.streamingFav("");
+            //account.userFav("rinaty0514",100);
+            account.streamingFav("ErlangRunner");
 
             Console.ReadKey();
         }
@@ -142,10 +142,12 @@ namespace tweet
         {
             Action<Status> fav = (state =>
             {
-                if (state.User.ScreenName == userID)
+                if (userID == state.User.ScreenName)
                 {
                     account.Favorites.Create(id => state.Id);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine($"User:{state.User.ScreenName}\n{state.Text}\nFaved\n");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
@@ -154,13 +156,16 @@ namespace tweet
             }
             );
 
-            Console.WriteLine($"User:{userID}");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"TargetUser:{userID}\n");
+            Console.ForegroundColor = ConsoleColor.White;
             account.Streaming.UserAsObservable()
                 .Where((StreamingMessage m) => m.Type == MessageType.Create)
                 .Cast<StatusMessage>()
                 .Select((StatusMessage m) => m.Status)
-                .Subscribe((Status s) => fav(s));
-            
+                .Subscribe((Status s) => fav(s),
+                (Exception ex) => Console.WriteLine(ex),
+                () => Console.WriteLine("えらー"));
 
             //Thread.Sleep(TimeSpan.FromSeconds(10));
 
