@@ -25,7 +25,7 @@ namespace tweet
             //account.UserTimeLine();
             //account.follow("");
             //account.tweet(Console.ReadLine());
-            //account.userFav("rinaty0514",100);
+            //account.userFav("",100);
             //account.streamingFav("");
 
             Console.ReadKey();
