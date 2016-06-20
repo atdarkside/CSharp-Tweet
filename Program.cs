@@ -17,8 +17,8 @@ namespace tweet
     {
         static void Main(string[] args)
         {
-            Consumer _consumer = new Consumer("rLiy8r1ChLkjm58RmrJtsAuWg", "yby8MpKk95L2PCRm8hV6ZSYseYy6paPQRBl3PD28TpukgREVFo");
-            Token _token = new Token("3299527134-kMVohuPpsZ4IEO858OjCROT9LhtzdqFmi5MCd6P", "zs7vzSSHNOsdIxajpvYZSNMxtHxif5jpSrAaS3LeamTsi");
+            Consumer _consumer = new Consumer("", "");
+            Token _token = new Token("", "");
             Account account = new Account(_consumer, _token);
 
             //account.HomeTimeLine();
@@ -26,7 +26,7 @@ namespace tweet
             //account.follow("");
             //account.tweet(Console.ReadLine());
             //account.userFav("rinaty0514",100);
-            account.streamingFav("TestC47908426");
+            //account.streamingFav("");
 
             Console.ReadKey();
         }
