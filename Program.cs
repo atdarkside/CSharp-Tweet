@@ -21,12 +21,20 @@ namespace tweet
             Token _token = new Token("", "");
             Account account = new Account(_consumer, _token);
 
+            string[] text = new string[]
+            {
+                "草",
+                "草."
+            };
+
             //account.HomeTimeLine();
             //account.UserTimeLine();
             //account.follow("");
             //account.tweet(Console.ReadLine());
-            //account.userFav("rinaty0514",100);
-            account.streamingFav("");
+            //account.userFav("",200);
+            //account.streamingFav("");
+            //account.fav(Console.ReadLine());
+            //account.reply("",text);
 
             Console.ReadKey();
         }
@@ -146,12 +154,12 @@ namespace tweet
                 {
                     account.Favorites.Create(id => state.Id);
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"User:{state.User.ScreenName}\n{state.Text}\nFaved\n");
+                    Console.WriteLine($"User:{state.User.ScreenName}  FavID:{state.Id}\n{state.Text}\nFaved\n");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
-                    Console.WriteLine($"User:{state.User.ScreenName}\n{state.Text}\n");
+                    Console.WriteLine($"User:{state.User.ScreenName}  FavID:{state.Id}\n{state.Text}\n");
                 }
             }
             );
@@ -171,6 +179,50 @@ namespace tweet
 
             //disposable.Dispose();
 
+        }
+
+        public void fav(string _id)
+        {
+            account.Favorites.Create(id => _id);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"ID:{_id}\nFaved");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("------------終了-----------------");
+            
+        }
+
+        public void reply(string userID,string[] texts)
+        {
+            int i = new int();
+            Action<Status> fav = (state =>
+            {
+                if (userID == state.User.ScreenName)
+                {
+                    account.Favorites.Create(id => state.Id);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    account.Statuses.Update(status => "@" + state.User.ScreenName.ToString() + " " + texts[i],in_reply_to_status_id => state.Id);
+                    Console.WriteLine($"User:{state.User.ScreenName}  FavID:{state.Id}\n{state.Text}\nFaved & Relpy\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    i++;
+                    if (i <= texts.Length) i = 0;
+                }
+                else
+                {
+                    Console.WriteLine($"User:{state.User.ScreenName}  FavID:{state.Id}\n{state.Text}\n");
+                }
+            }
+);
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"TargetUser:{userID}\n");
+            Console.ForegroundColor = ConsoleColor.White;
+            account.Streaming.UserAsObservable()
+                .Where((StreamingMessage m) => m.Type == MessageType.Create)
+                .Cast<StatusMessage>()
+                .Select((StatusMessage m) => m.Status)
+                .Subscribe((Status s) => fav(s),
+                (Exception ex) => Console.WriteLine(ex),
+                () => Console.WriteLine("えらー"));
         }
     }
 }
